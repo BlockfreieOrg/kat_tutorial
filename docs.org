@@ -1,0 +1,16 @@
+* diagrams
+#+begin_src ditaa :file load-ledger.png :exports results
+ +--------------+   +------------+    +-------+    +------------+    +------------+
+ | Transactions +-->+ Save Batch +--> | Batch +--->+ Batch Entry+--->+ Dump State |
+ | {d}          |   | {io}       |    |{s}    |    | {io}       |    | {io}       |
+ +--------------+   +------------+    +-------+    +-+--------+-+    +------------+
+                                                     |        |
+                                    +--------+       |        |      +------------+
+                                    | Ledger |       |        |      | Quarantine |
+                                    | {s}    +<------/        \----->+ {s}        |
+                                    |        |                       |            |
+                                    +--------+                       +------------+
+#+end_src
+
+#+RESULTS:
+[[file:load-ledger.png]]

@@ -1,3 +1,6 @@
+*~
+github.com
+golang.org
 # Binaries for programs and plugins
 *.exe
 *.dll
@@ -12,3 +15,6 @@
 
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
+kat_tutorial
+*.log
+load-ledger.png
