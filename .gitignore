@@ -17,4 +17,3 @@ golang.org
 .glide/
 kat_tutorial
 *.log
-load-ledger.png
