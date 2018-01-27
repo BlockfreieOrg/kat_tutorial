@@ -355,7 +355,7 @@ effort.
 
 # Hoare triples
 
-A design pattern for expression of this form is a Hoare triple.
+A pattern to apply to expressions is the Hoare triple.
 
 ```math
    {P} * C *  {Q}
@@ -388,7 +388,7 @@ betterCreateSender = !senderExists * createSender * senderExists
 ```
 # Further Reading and Sources
 
-## [Kleene Algebra with Tests: A Tutorial](www.cl.cam.ac.uk/events/ramics13/KozenTutorial1.pdf)
+## [Kleene Algebra with Tests: A Tutorial](https://www.cl.cam.ac.uk/events/ramics13/KozenTutorial1.pdf)
 
 This presentation is a slight variation on the standard treatment of
 Kleene Algebra with tests. The difference being is it difficult in an
