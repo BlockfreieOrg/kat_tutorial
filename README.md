@@ -1,18 +1,17 @@
 # Kleene algebra of tests and transactions
 
 This article explores structuring of database
-operations as kleene algebra expressions.  It
-demonstrates how to build application out of
+operations as Kleene algebra expressions.  It
+demonstrates how to build an application out of
 small units of code called tests and joint them
 together using operators.
 
+The code for this tutorial is available on GitHub.
+
 [https://github.com/BlockfreieOrg/kat_tutorial](https://github.com/BlockfreieOrg/kat_tutorial)
 
-
-
-The code for this tutorial can be found here.
-If you find yourself implementing this in your
-favorite language send me a link.
+Send me a link to your implementation in your favorite
+language, and I will include a link.
 
 # Kleene algebra
 
@@ -26,9 +25,10 @@ of operators and symbols.
 Symbols
    * K - K is a collection of operations that either succeed or fail.
 
-	   Within this collection there are a few _distingushed_ elements
-       * 0 - a trivial operation that fails
-       * 1 - a trivial operation that is successful
+	   Within this collection, there are a few _distinguished elements_ .
+
+       * 0 - A trivial operation that fails.
+       * 1 - A trivial operation that is successful.
 
 Operators
    * a * b - sequential composition
@@ -36,13 +36,14 @@ Operators
    * a ⃰  :  iteration
 
 
-If you use regular expressions these operators should
+If you use regular expressions, these operators should
 be familiar.
 
 # Motivation - ledger
 
-Lets consider the problem of maintaining a ledger.  We have a database
-backed ledger and we are processing batches of transactions.
+Let's consider the problem of maintaining a ledger.  This
+application is a database-backed ledger processing batches
+of transactions.
 
 Transition entries specified by the following data structure
 
@@ -62,8 +63,9 @@ in JSON format.  Below is a sample transaction entry.
 ```
 
 These entries are loaded from the file and processed by the
-application.  Assuming you have a copy of the project and
-the golang environment.
+application.  If you have "Go" installed, you can build the
+project.
+
 
 ```shell
 go build
@@ -80,20 +82,19 @@ and output the final state of ledger.
 
 ![load ledger](load-ledger.png)
 
-The application first loads the transactions into a batch
-table.  The method batch entry then applies the transaction
-either updating the ledger or quarantining the transaction.
-The appication then dumps the state of the ledger.
-
+The application first loads the transactions into a batch table. The
+method batch entry then applies the transaction either updating the
+ledger or quarantining the entry. The application then outputs the
+state of the database.
 
 # 0,K - operations that either succeed or fail
 
 We can express a test as a function that takes a transaction and
-returns a boolean.  It is important to note that the tests themseleves
-are statelesss.  The statefullness comes from the database and the
-databas eonly, the use of global variables, closures is not permitted.
-For this implementation this is given by the following type
-expression:
+returns a boolean. It is important to note, the tests themselves must
+be stateless. The statefulness comes from the database, and the
+database only.  The use of global variables, closures, or external
+states is not permitted. For this implementation this is given by the
+following type expression:
 
 ```go
 type KatExpression func(*sql.Tx) bool
@@ -144,9 +145,9 @@ var One KatExpression = Not(Zero)
 
 # * - sequential composition
 
-Typically when a transaction is recieved it is verified.
-First the transfer amount must be postive and the sender
-and the reciever must exists
+Typically when a transaction is received, it is verified. First, it
+checks the transfer amount is positive and then verify that the sender
+and the receiver exist.
 
 ```math
 VerifyTransaction = PositiveTransfer * SenderExists * RecieverExists
@@ -167,12 +168,12 @@ func And(args ... KatExpression) (KatExpression) {
 }
 ```
 
-This behaves as we would expect an and operator to work.  It first
-tries the first operator,  If this returns true it then tries the
-next term.  If any of the operators return false it returns false
-otherwise it returns true.
+The and operator behaves as we would expect an and operator to
+work. It first tries the first operator, If this returns true, it then
+tries the next term. If any of the operators return false, it returns
+false otherwise it returns true.
 
-We can implement the psuedo code from the begining of the section.
+We can implement the pseudo code from the beginning of the section.
 
 ```go
 func VerifyTransaction(entry Entry) go_kat.KatExpression {
@@ -194,7 +195,7 @@ ensureReciever = !recieveExists + createReciever
 
 If the sender/reciever does not exists then create the sender/reciever.
 
-In order to implement the Or operatior is introduced.
+To implement the above expression, let's implement the Or operator.
 
 ```go
 func Or(args ... KatExpression) (KatExpression) {
@@ -220,7 +221,7 @@ the transaction and tries the next one.  It fails if all
 the operators return false the identity of the or operator.
 
 
-The expression ensureSender is implemented
+Below is the implementation of the expression "ensureSender".
 
 ```go
 func EnsureSender(entry Entry) KatExpression {
@@ -244,11 +245,12 @@ processEntry = removeBatch
                  + quarantineTransaction)
 ```
 
-The details of the functions in the expression are ommited for brevity
-but it first checks the transaction applies the transaction then
-checks the result.  Where if a transaction can not be processed
-because a step returned false it is placed in quarantine.  We then
-want to process each transaction for each entry.
+The implementation and details of the functions in the expression are
+omitted for brevity.  The expression first checks the transaction
+applies the transaction then checks the result. If a transaction
+fails, it is placed in quarantine. We then want to process each
+transaction for each entry.
+
 
 ```math
 batchEntry = processEntry ⃰
@@ -317,7 +319,7 @@ Using this approach one ends up with small blocks of code held
 together with operators.  Note the code is absent the error checking
 code and conditional code which tend to increase complexity.
 Formulating an operation as a Kleene algebraic expression
-allows it to be restructured algebraically. That's to say also long as
+allows for algebraically restructuring. That's to say also long as
 two expressions are algebraically equivalent they are (and do) the
 same things.  Here are a few identities to get started.
 
@@ -338,7 +340,7 @@ Zero = Zero * ensureSender
 ensureSender = One * ensureSender
 ```
 
-Well we know these follows from the the rule of alegbra.
+These equalities follow from algebra.
 
 ```math
 ensureSender * ensureReciever =
@@ -353,7 +355,7 @@ effort.
 
 # Hoare triples
 
-A common pattern for for operations of these form is a Haore triple.
+A design pattern for expression of this form is a Hoare triple.
 
 ```math
    {P} * C *  {Q}
@@ -361,11 +363,10 @@ A common pattern for for operations of these form is a Haore triple.
 
    * P - is a precondition
    * C - command
-   * Q - is a post condition
+   * Q - is a postcondition
 
-A command C is guarded by a precondition P.  The post condition
-Q is checked after the command is run to ensure the command has
-the desired side effects.
+The precondition P guards the command C. The postcondition Q is
+checked after executing C to ensure the desired side effects.
 
 An example of this is remove batch.
 
@@ -373,13 +374,13 @@ An example of this is remove batch.
 removeBatch = batchExists * deleteBatch * !batchExists
 ```
 
-This first checks if the batch entry exists, then removes it
-and then checks if it is removed.  These pre and post condition
-ensure that remove batch behaves as expected.
-
+This first test checks if the batch entry exists. Then the entry is
+removed by command _deleteBatch_ removing it from the database. It
+then checks for the removal of the batch entry. These pre and
+postconditions ensure that remove batch behaves as expected.
 
 Another example is a better createSender
-that has the requiste pre and post conditional tests for creating
+that has the requisite pre and postconditional tests for creating
 a sender.
 
 ```math
@@ -389,12 +390,13 @@ betterCreateSender = !senderExists * createSender * senderExists
 
 ## [Kleene Algebra with Tests: A Tutorial](www.cl.cam.ac.uk/events/ramics13/KozenTutorial1.pdf)
 
-This approach is based on Kleene Algebra with tests.  The difference
-being is it difficult in an imperative language to make tests with
-guarantees of no side effects.  As a result the tests and the commands
-were combined in this approach.
+This approach just a slight variation on the standard treatment of
+Kleene Algebra with tests. The difference being is it difficult in an
+imperative language to make tests with guarantees of no side
+effects. As a result, the tests and the commands are combined in this
+approach.
 
 ## [A Short Introduction to Hoare Logic](https://www.cse.iitb.ac.in/~supratik/courses/cs615/msri_ss08.pdf)
 
-Structuring the tests is an important to the approach and this gives
-an great overview to structure them.
+Structuring the tests is important to the approach.  This discussion on
+Hoare logic gives a great overview of how to structure them.
