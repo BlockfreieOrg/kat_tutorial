@@ -195,7 +195,7 @@ ensureReciever = !recieveExists + createReciever
 
 If the sender/reciever does not exists then create the sender/reciever.
 
-To implement the above expression, let's implement the Or operator.
+To implement the above expression, let's provide the Or operator.
 
 ```go
 func Or(args ... KatExpression) (KatExpression) {
@@ -368,7 +368,7 @@ A design pattern for expression of this form is a Hoare triple.
 The precondition P guards the command C. The postcondition Q is
 checked after executing C to ensure the desired side effects.
 
-An example of this is remove batch.
+An example of this is _removeBatch_.
 
 ```math
 removeBatch = batchExists * deleteBatch * !batchExists
@@ -379,7 +379,7 @@ removed by command _deleteBatch_ removing it from the database. It
 then checks for the removal of the batch entry. These pre and
 postconditions ensure that remove batch behaves as expected.
 
-Another example is a better createSender
+Another example is a better _createSender_
 that has the requisite pre and postconditional tests for creating
 a sender.
 
@@ -390,13 +390,15 @@ betterCreateSender = !senderExists * createSender * senderExists
 
 ## [Kleene Algebra with Tests: A Tutorial](www.cl.cam.ac.uk/events/ramics13/KozenTutorial1.pdf)
 
-This approach just a slight variation on the standard treatment of
+This presentation is a slight variation on the standard treatment of
 Kleene Algebra with tests. The difference being is it difficult in an
-imperative language to make tests with guarantees of no side
-effects. As a result, the tests and the commands are combined in this
-approach.
+imperative language to make tests with guarantees of no side effects
+other than that of the database. As a result, the tests and the
+commands they unified in this approach.
+
 
 ## [A Short Introduction to Hoare Logic](https://www.cse.iitb.ac.in/~supratik/courses/cs615/msri_ss08.pdf)
 
-Structuring the tests is important to the approach.  This discussion on
-Hoare logic gives a great overview of how to structure them.
+Structuring the tests is key to building these expressions. This
+discussion on Hoare logic gives an excellent overview of how to
+structure them.
