@@ -1,4 +1,76 @@
+    First off, the description is a bit hard to digest.  You might
+    want to expand on what you're doing more along with why it's
+    interesting or important.  This has something to do with
+    blockchain ledger in Kleene algebras?  You might also want to give
+    a quick run down of the higher level concepts and why it's
+    interesting to do them together?
+
+    Under the "Kleene algebra" section, you might want to try to use a
+    different symbol for multiplication so you can use the '*' symbol
+    for the Kleene-star.  Maybe '.'?  Having the weird symbol is a bit
+    confusing and hard to read.  Also consider using LaTex.  I don't
+    think you can use it in GitHub Markdown on their site, but if you
+    self host or host it on a GitHub pages page, then you could put in
+    MathJax or something similar.
+
+    When saying that the operations should be familiar if you have
+    regular expression knowledge, you might want to expand (I know
+    regex and I still don't quite see the parallel).  Maybe put it in
+    a table with "Kleen operator" on the left and "Rexexp equivalent"
+    on the right.
+
+    Under "Motivation", you should mention that the code, structure,
+    etc. is in Golang (maybe even provide a link).
+
+    The picture is good but a little confusing.  I don't quite know
+    what 'transactions' are, what the 'save batch', 'batch' etc and
+    all the rest are.  It's kind of given without explanation.  What
+    is quarantining?  What is 'dump state'?
+
+    Under "0,K - operations ...", the sentence "A possible test if the
+    check if a transaction has positive amount" is malformed..."A
+    possible test is to check if the transaction amount is positive."?
+
+    You might want to go into more detail about what you're doing
+    here.  You're actually returning a function that tests the amount,
+    not testing the amount.  Why?
+
+    Under '* - sequential composition", but 'And' in bold or italics
+    or with the `` quotes and do that wherever you refer to it so
+    people know you're talking about the "and" operator.
+
+    Under "+ - Choice" the sentence should be "Let's consider the
+    following algebraic expressions".
+
+    You should briefly mention what the salt is doing there.
+
+    "This operation tries an operation.  If it fails, it rolls back the transaction and tries the next one."  and I don't quite know what you were trying to say with the last sentence.."It fails if all the operators return false the identify of the or operator"(?)
+
+    Under "Fun with Algebra", 0*p = p?
+
+  To build the go example, you need the 'github.com/rs/xid' package, so you might want to add that under the "Motivation" section.
+
+  You might also want to tell how to use the go code.  I had trouble getting it to run when I cloned the repo:
+
+
 # Kleene algebra of tests and transactions
+
+Have you are given a simple business requirement.  Once you start
+coding and refining these requirements, you quickly find yourself
+overwhelmed tracking cases and conditions to guarantee and guard
+against.  To handle these cases the code quickly devolves in to a
+large nested if else then statements.  These complexity of statements
+make them difficult to test and refactor safely.  Sounds familar?
+
+This tutorial introduces an approach structuring code to deal with the
+complexity of refining requirements and ensuring that the
+implementation meets these requirements.
+
+Lets consider the following requirement.
+
+Check if the sender and receiver can enact the transaction, if so
+do the transaction otherwise otherwise quarantine the transaction.
+
 
 This article explores structuring of database
 operations as Kleene algebra expressions.  It
